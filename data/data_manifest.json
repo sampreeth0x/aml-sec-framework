@@ -1,0 +1,12 @@
+{
+  "train_images": "c3557c10f29b266e19b3eeee1553c85e0ef4a8ea",
+  "train_labels": "adbf52269f5d842899f287c269e2883e40b4f6e2",
+  "test_images": "65e11ec1fd220343092a5070b58418b5c2644e26",
+  "test_labels": "a6d52cc628797e845885543326e9f10abb8a6f89",
+  "shape_train": [
+    60000,
+    28,
+    28
+  ],
+  "n_train_labels": 60000
+}

@@ -1,0 +1,172 @@
+{
+  "config": {
+    "budgets": [
+      500,
+      1000,
+      2000,
+      4000
+    ],
+    "policies": [
+      "full_confidence",
+      "rounded",
+      "argmax_only"
+    ],
+    "sub_epochs": 6
+  },
+  "timestamp": "2026-09-11 17:35:41",
+  "target": {
+    "accuracy": 0.98525,
+    "train_seconds": 57.21025538444519
+  },
+  "runs": [
+    {
+      "budget": 500,
+      "policy": "full_confidence",
+      "queries_used": 500,
+      "substitute_accuracy_mean": 0.8683333333333333,
+      "substitute_accuracy_std": 0.0030912061651652374,
+      "fidelity_mean": 0.876,
+      "fidelity_std": 0.00244948974278318
+    },
+    {
+      "budget": 500,
+      "policy": "rounded",
+      "queries_used": 500,
+      "substitute_accuracy_mean": 0.878,
+      "substitute_accuracy_std": 0.008981462390204994,
+      "fidelity_mean": 0.8866666666666667,
+      "fidelity_std": 0.008993825042154702
+    },
+    {
+      "budget": 500,
+      "policy": "argmax_only",
+      "queries_used": 500,
+      "substitute_accuracy_mean": 0.8743333333333334,
+      "substitute_accuracy_std": 0.008576453553512412,
+      "fidelity_mean": 0.883,
+      "fidelity_std": 0.010230672835481881
+    },
+    {
+      "budget": 1000,
+      "policy": "full_confidence",
+      "queries_used": 1000,
+      "substitute_accuracy_mean": 0.9166666666666666,
+      "substitute_accuracy_std": 0.003299831645537225,
+      "fidelity_mean": 0.9256666666666667,
+      "fidelity_std": 0.0024944382578492965
+    },
+    {
+      "budget": 1000,
+      "policy": "rounded",
+      "queries_used": 1000,
+      "substitute_accuracy_mean": 0.9133333333333334,
+      "substitute_accuracy_std": 0.007363574011458181,
+      "fidelity_mean": 0.9216666666666667,
+      "fidelity_std": 0.006944222218666559
+    },
+    {
+      "budget": 1000,
+      "policy": "argmax_only",
+      "queries_used": 1000,
+      "substitute_accuracy_mean": 0.9183333333333333,
+      "substitute_accuracy_std": 0.010208928554075711,
+      "fidelity_mean": 0.9256666666666667,
+      "fidelity_std": 0.00895668589502961
+    },
+    {
+      "budget": 2000,
+      "policy": "full_confidence",
+      "queries_used": 2000,
+      "substitute_accuracy_mean": 0.9466666666666667,
+      "substitute_accuracy_std": 0.0020548046676563273,
+      "fidelity_mean": 0.9556666666666667,
+      "fidelity_std": 0.0024944382578492965
+    },
+    {
+      "budget": 2000,
+      "policy": "rounded",
+      "queries_used": 2000,
+      "substitute_accuracy_mean": 0.9470000000000001,
+      "substitute_accuracy_std": 0.0029439202887759515,
+      "fidelity_mean": 0.955,
+      "fidelity_std": 0.0016329931618554536
+    },
+    {
+      "budget": 2000,
+      "policy": "argmax_only",
+      "queries_used": 2000,
+      "substitute_accuracy_mean": 0.9396666666666667,
+      "substitute_accuracy_std": 0.0055577773335109765,
+      "fidelity_mean": 0.9466666666666667,
+      "fidelity_std": 0.008259674462242534
+    },
+    {
+      "budget": 4000,
+      "policy": "full_confidence",
+      "queries_used": 3000,
+      "substitute_accuracy_mean": 0.9573333333333333,
+      "substitute_accuracy_std": 0.0024944382578492965,
+      "fidelity_mean": 0.9673333333333334,
+      "fidelity_std": 0.0018856180831641283
+    },
+    {
+      "budget": 4000,
+      "policy": "rounded",
+      "queries_used": 3000,
+      "substitute_accuracy_mean": 0.9576666666666666,
+      "substitute_accuracy_std": 0.0009428090415820641,
+      "fidelity_mean": 0.9646666666666667,
+      "fidelity_std": 0.0016996731711975963
+    },
+    {
+      "budget": 4000,
+      "policy": "argmax_only",
+      "queries_used": 3000,
+      "substitute_accuracy_mean": 0.9536666666666666,
+      "substitute_accuracy_std": 0.0023570226039551605,
+      "fidelity_mean": 0.96,
+      "fidelity_std": 0.0029439202887759515
+    },
+    {
+      "budget": 500,
+      "policy": "full_confidence+ratelimit1000",
+      "queries_used": 500,
+      "refused_queries": 0,
+      "substitute_accuracy_mean": 0.867,
+      "substitute_accuracy_std": 0.0,
+      "fidelity_mean": 0.874,
+      "fidelity_std": 0.0
+    },
+    {
+      "budget": 1000,
+      "policy": "full_confidence+ratelimit1000",
+      "queries_used": 1000,
+      "refused_queries": 0,
+      "substitute_accuracy_mean": 0.92,
+      "substitute_accuracy_std": 0.0,
+      "fidelity_mean": 0.929,
+      "fidelity_std": 0.0
+    },
+    {
+      "budget": 2000,
+      "policy": "full_confidence+ratelimit1000",
+      "queries_used": 1000,
+      "refused_queries": 1000,
+      "substitute_accuracy_mean": 0.902,
+      "substitute_accuracy_std": 0.0,
+      "fidelity_mean": 0.912,
+      "fidelity_std": 0.0
+    },
+    {
+      "budget": 4000,
+      "policy": "full_confidence+ratelimit1000",
+      "queries_used": 1000,
+      "refused_queries": 2000,
+      "substitute_accuracy_mean": 0.912,
+      "substitute_accuracy_std": 0.0,
+      "fidelity_mean": 0.922,
+      "fidelity_std": 0.0
+    }
+  ],
+  "target_accuracy_on_eval_slice": 0.985
+}

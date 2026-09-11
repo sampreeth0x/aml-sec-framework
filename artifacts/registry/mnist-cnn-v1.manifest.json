@@ -1,0 +1,11 @@
+{
+  "model_id": "mnist-cnn-v1",
+  "sha256": "b096eb55856ec913a868dc3f90f94bf5e21d71fe74bca4568e66602b05e7e424",
+  "metadata": {
+    "dataset": "mnist-subset",
+    "accuracy": 0.983,
+    "framework": "amlsec",
+    "epochs": 4
+  },
+  "hmac_sha256": "265c7cb1fe9a8cd669edb1b2620c748c67be9f8f26bf1999ef4de9c24cb0873e"
+}

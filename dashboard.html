@@ -1,0 +1,351 @@
+<!doctype html>
+<title>AML-Sec Security Evaluation</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#0A111E; --panel:#101A2C; --panel2:#0D1526; --line:#22314B;
+  --ink:#E9EEF7; --muted:#93A1B8; --faint:#5C6C86;
+  --safe:#3DDC97; --warn:#F2B544; --risk:#FF5C6C; --accent:#5AA9FF;
+}
+*{box-sizing:border-box; margin:0}
+body{background:var(--ground); color:var(--ink); font:15px/1.6 "IBM Plex Sans",system-ui,sans-serif;
+     -webkit-font-smoothing:antialiased}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.wrap{max-width:1120px; margin:0 auto; padding:48px 28px 80px}
+header{display:flex; flex-wrap:wrap; gap:16px 24px; align-items:baseline; border-bottom:1px solid var(--line); padding-bottom:20px}
+h1{font-size:26px; font-weight:600; letter-spacing:-0.01em}
+h1 .sec{color:var(--accent)}
+.sub{color:var(--muted); font-size:13px}
+.chips{display:flex; gap:8px; flex-wrap:wrap; margin-left:auto}
+.chip{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--muted);
+      border:1px solid var(--line); border-radius:4px; padding:3px 9px; white-space:nowrap}
+h2{font-size:13px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase;
+   color:var(--muted); margin:52px 0 6px}
+.note{color:var(--faint); font-size:13px; margin-bottom:16px}
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:10px; margin-top:24px}
+.tile{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px 14px 12px}
+.tile .name{font-size:12px; color:var(--muted); margin-bottom:8px}
+.tile .score{font-family:"IBM Plex Mono",monospace; font-size:26px; font-weight:600; line-height:1}
+.tile .bar{height:4px; border-radius:2px; background:var(--line); margin:10px 0 8px; overflow:hidden}
+.tile .bar i{display:block; height:100%; border-radius:2px}
+.tile .def{font-size:11.5px; color:var(--faint); line-height:1.45}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:18px}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+table{width:100%; border-collapse:collapse; font-family:"IBM Plex Mono",monospace; font-size:12.5px}
+th{color:var(--faint); font-weight:500; text-align:left; padding:6px 8px; border-bottom:1px solid var(--line);
+   text-transform:uppercase; letter-spacing:0.06em; font-size:10.5px}
+td{padding:6px 8px; border-bottom:1px solid var(--panel2); font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+td.num{text-align:right}
+.good{color:var(--safe)} .bad{color:var(--risk)} .mid{color:var(--warn)}
+.finding{border-left:2px solid var(--accent); background:var(--panel2);
+         padding:12px 16px; border-radius:0 6px 6px 0; font-size:13.5px; color:var(--ink); margin-top:12px}
+.finding b{color:var(--accent)}
+.finding + .finding{margin-top:8px}
+.verdict{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600;
+         border-radius:4px; padding:2px 8px; letter-spacing:0.04em}
+.verdict.pass{color:var(--safe); border:1px solid var(--safe)}
+.verdict.fail{color:var(--risk); border:1px solid var(--risk)}
+footer{margin-top:64px; border-top:1px solid var(--line); padding-top:16px;
+       color:var(--faint); font-size:12px; line-height:1.7}
+.legend{display:flex; gap:14px; flex-wrap:wrap; margin:6px 0 10px; font-size:12px; color:var(--muted)}
+.legend i{display:inline-block; width:14px; height:2px; vertical-align:middle; margin-right:6px; border-radius:1px}
+.chartwrap{overflow-x:auto}
+svg text{font-family:"IBM Plex Mono",monospace}
+</style>
+<div class="wrap">
+<header>
+  <h1>AML-SEC <span class="sec">/</span> Security Evaluation</h1>
+  <div class="chips mono">
+    <span class="chip">MNIST · 20k/4k stratified</span>
+    <span class="chip">SmallCNN ~81k params</span>
+    <span class="chip">3 seeds/config</span>
+    <span class="chip">PyTorch CPU</span>
+  </div>
+</header>
+
+<div class="kpis" id="kpis"></div>
+
+<h2>01 · Poisoning — dose response</h2>
+<p class="note">Targeted label flips, class 2 → 7. Clean accuracy barely moves; the damage concentrates on the source class and shows up first in calibration (ECE).</p>
+<div class="grid2">
+  <div class="card chartwrap" id="ch_poison"></div>
+  <div class="card">
+    <table id="t_poison"></table>
+  </div>
+</div>
+<div class="finding"><b>Detection before degradation:</b> the kNN label audit flags poisoned samples with recall <span class="mono" id="d_rec"></span> — detection degrades as the poison fraction grows (poisoned samples stop looking anomalous). Audit-and-filter retraining recovers source-class accuracy to <span class="mono" id="d_def"></span> at a ~1pt clean-accuracy cost.</div>
+
+<h2>02 · Backdoor — patch trigger → class 0</h2>
+<p class="note">3×3 patch stamped only on poisoned samples. Conventional validation sees a healthy model; the trigger works.</p>
+<div class="grid2">
+  <div class="card chartwrap" id="ch_bd"></div>
+  <div class="card"><table id="t_bd"></table></div>
+</div>
+<div class="finding"><b>Cross-threat finding:</b> the same data audit that cleans label-flip poisoning is <b class="bad">ineffective against the backdoor</b> — it recovers only <span class="mono" id="bd_rec"></span> of poison and ASR stays at <span class="mono" id="bd_asr2"></span>. The model-level trigger-flip scan (flip-to-target rate <span class="mono" id="bd_scan"></span> on correct predictions) is the detector that works. Backdoor defense must inspect the model, not just the data.</div>
+
+<h2>03 · Extraction — substitute fidelity vs query budget</h2>
+<p class="note">Target accuracy <span class="mono" id="ex_acc"></span>. Fidelity = substitute↔target agreement on held-out data.</p>
+<div class="card chartwrap" id="ch_ex"></div>
+<div class="finding"><b>Measured trade-off:</b> output restriction (rounding, argmax-only) barely reduces fidelity (<span class="mono" id="ex_gap"></span> drop) — on MNIST, hard labels alone suffice to steal the classifier. The rate limit is the only control that bites: it caps fidelity at <span class="mono" id="ex_rl"></span> regardless of the attacker's budget.</div>
+
+<h2>04 · Membership inference & privacy</h2>
+<p class="note">Score-based MIA (confidence / loss / margin). Members = real training samples, non-members = test population.</p>
+<div class="grid2">
+  <div class="card"><table id="t_mia"></table></div>
+  <div class="card"><table id="t_dp"></table></div>
+</div>
+<div class="finding"><b>Honest finding:</b> on MNIST with 20k samples this CNN leaks almost nothing through its outputs (AUC ≈ 0.50 at every epoch count, and ≈ 0.51 even at 3k samples / 20 epochs). DP-style clipped+noisy training reliably suppresses the train–test gap (<span class="mono" id="dp_gap"></span> → <span class="mono" id="dp_gap3"></span>) and pushes AUC below 0.5, at a measured accuracy cost of <span class="mono" id="dp_cost"></span> at the strongest setting.</div>
+
+<h2>05 · Adversarial examples — FGSM / PGD</h2>
+<div class="grid2">
+  <div class="card chartwrap" id="ch_adv"></div>
+  <div class="card"><table id="t_adv"></table></div>
+</div>
+<div class="finding"><b>Robustness–utility Pareto:</b> adversarial training buys <span class="mono" id="at_gain"></span> robustness at ε=0.1 for <span class="mono" id="at_cost"></span> clean accuracy. Label smoothing costs nothing in clean accuracy and buys nothing — it is not a robustness defense.</div>
+
+<h2>06 · Supply-chain integrity</h2>
+<div class="card"><table id="t_sc"></table></div>
+<div class="finding"><b>What integrity checking protects:</b> the 1-ulp tampered artifact is behaviorally indistinguishable from the approved model (<span class="mono" id="sc_dis"></span> prediction disagreement, accuracy unchanged) — behavioral testing cannot catch it. Hash + HMAC verification catches it before load, every time, with zero utility cost.</div>
+
+<h2>07 · Trade-off matrix</h2>
+<div class="grid2">
+  <div class="card"><table id="t_priv"></table></div>
+  <div class="card"><table id="t_rob"></table></div>
+</div>
+
+<h2 id="sec_ctm">08 · Cross-threat Δ-security matrix</h2>
+<p class="note" id="ctm_note">Each defense is a training regime, retrained under clean / 5% poison / 5% backdoor data and probed by MIA, extraction and PGD directly. Cell = ΔS(D,A) = S(baseline,A) − S(defense,A): <b>positive = defending one threat helped against another</b>, negative = collateral damage.</p>
+<div id="ctm" hidden>
+  <div class="card chartwrap"><div id="heatmap"></div>
+    <div class="legend"><span><i style="background:var(--safe)"></i>+ significant transfer</span>
+      <span><i style="background:var(--line)"></i>0 negligible</span>
+      <span><i style="background:var(--risk)"></i>− significant adverse</span>
+      <span>? unresolved at 3 seeds (paired t band, df=2)</span></div>
+  </div>
+  <div class="card" style="margin-top:10px"><table id="t_ctm"></table></div>
+  <div class="finding" id="ctm_finding" hidden></div>
+</div>
+
+<footer>
+  <b class="mono" style="color:var(--muted)">Methodology</b><br>
+  Every figure on this page is measured from real training runs and real model queries (results/*.json in the repo; nothing hardcoded). Poisoning is targeted label-flip; MIA is score-based thresholding; the DP-style defense is batch gradient clipping + Gaussian noise — an approximation of DP-SGD without formal ε accounting. Scoring formula:<br>
+  <span class="mono" id="formula" style="font-size:11px"></span>
+</footer>
+</div>
+
+<script>
+const DATA = {"profile": {"poisoning": {"risk_undefended": 11.7625, "measured": {"accuracy_drop_at_5pct": -0.002666666666666706, "src_to_tgt_transfer": 0.0075, "audit_recall": 0.54}, "defense": "kNN audit-and-filter retraining", "defense_residual_drop": 0.010666666666666713, "defense_recovery": 0.9683333333333334}, "backdoor": {"risk_undefended": 99.83756597222221, "measured": {"asr_at_5pct": 0.9991666666666666, "stealth_multiplier": 0.9984166666666666, "clean_accuracy_at_5pct": 0.9823333333333334}, "defense": "kNN audit-and-filter (data-level) \u2014 measured INEFFECTIVE", "defense_asr": 0.9995833333333334, "detection_trigger_flip_scan": 0.8982881944903406}, "extraction": {"risk_undefended": 96.73333333333333, "measured": {"fidelity_max_budget_full_api": 0.9673333333333334, "fidelity_argmax_api": 0.96}, "defense": "argmax-only + rate limiting", "defense_fidelity": 0.96}, "membership_inference": {"risk_undefended": 1.5303277777777735, "measured": {"auc_4epochs_20k": 0.5021450166666667, "auc_8epochs_20k": 0.5053194, "auc_overfit_3k_long": 0.5076516388888889}, "defense": "DP gradient clip+noise", "defense_auc": 0.4989808041666666, "defense_clean_accuracy": 0.9747499999999999}, "adversarial_examples": {"risk_undefended": 26.975000000000005, "measured": {"pgd_success_eps0.1": 0.26975000000000005, "clean_accuracy_baseline": 0.9834166666666667}, "defense": "PGD adversarial training", "defense_success_rate": 0.1609166666666666, "defense_clean_accuracy": 0.96975, "clean_accuracy_cost": 0.013666666666666716}, "supply_chain": {"risk_undefended": 100.0, "measured": {"behavioral_check_catches_tamper": false, "prediction_disagreement_rate": 0.0, "integrity_verdict": "TAMPER_DETECTED"}, "defense": "SHA-256 + HMAC-signed manifest", "defense_residual_risk": 0.0}}, "poisoning": {"fractions": [0.0, 0.01, 0.03, 0.05, 0.1], "clean_acc": [0.9836666666666667, 0.9815833333333334, 0.9823333333333334, 0.981, 0.9816666666666666], "src_acc": [0.9775, 0.9700000000000001, 0.985, 0.9783333333333334, 0.96], "transfer": [0.0033333333333333335, 0.011666666666666667, 0.0025, 0.0075, 0.02], "ece": [0.005154760313530766, 0.006240018126865234, 0.004308144189417368, 0.008029813113311914, 0.015277928008387502], "detect_recall": {"0.01": 0.95, "0.03": 0.7, "0.05": 0.54, "0.1": 0.36}, "defense": 0.973, "defense_src": 0.9683333333333334}, "backdoor": {"fractions": [0.0, 0.01, 0.03, 0.05], "clean_acc": [0.9839166666666667, 0.9821666666666666, 0.9815833333333334, 0.9823333333333334], "asr": [0.10208333333333335, 0.9979166666666667, 0.99975, 0.9991666666666666], "flip_scan": [0.00025464731347084286, 0.8970018410090178, 0.8986338236214686, 0.8982881944903406], "defense_asr": 0.9995833333333334, "defense_recovered": 0.492}, "extraction": {"budgets": [500, 1000, 2000, 4000], "series": {"full_confidence": [0.876, 0.9256666666666667, 0.9556666666666667, 0.9673333333333334], "rounded": [0.8866666666666667, 0.9216666666666667, 0.955, 0.9646666666666667], "argmax_only": [0.883, 0.9256666666666667, 0.9466666666666667, 0.96]}, "ratelimit": {"500": 0.874, "1000": 0.929, "2000": 0.912, "4000": 0.922}, "target_acc": 0.98525}, "privacy": {"epoch_study": [{"epochs": 1, "gap": 0.0020333333333333314, "auc": 0.5000034583333334, "tpr": 0.049633333333333335}, {"epochs": 2, "gap": 0.004116666666666657, "auc": 0.5014149458333333, "tpr": 0.05253333333333334}, {"epochs": 4, "gap": 0.008116666666666661, "auc": 0.5021450166666667, "tpr": 0.04893333333333333}, {"epochs": 8, "gap": 0.010866666666666617, "auc": 0.5053194, "tpr": 0.0}], "defenses": [{"defense": "label_smoothing", "param": 0.1, "clean_accuracy_mean": 0.9869166666666667, "mia_auc_mean": 0.50542045, "baseline_auc_mean": 0.5021450166666667}, {"defense": "label_smoothing", "param": 0.3, "clean_accuracy_mean": 0.9874999999999999, "mia_auc_mean": 0.5071773166666667, "baseline_auc_mean": 0.5021450166666667}, {"defense": "dp_grad_clip+noise", "param": 0.5, "clean_accuracy_mean": 0.9747499999999999, "mia_auc_mean": 0.4989808041666666, "baseline_auc_mean": 0.5}, {"defense": "dp_grad_clip+noise", "param": 1.0, "clean_accuracy_mean": 0.9656666666666668, "mia_auc_mean": 0.49731921250000005, "baseline_auc_mean": 0.5}, {"defense": "dp_grad_clip+noise", "param": 2.0, "clean_accuracy_mean": 0.9428333333333333, "mia_auc_mean": 0.4968849708333334, "baseline_auc_mean": 0.5}], "small_study": [{"config": "baseline", "gap": 0.011099999999999999, "auc": 0.5068895277777777, "test_acc": 0.9855}, {"config": "baseline_long", "gap": 0.013033333333333378, "auc": 0.5076516388888889, "test_acc": 0.9845}, {"config": "dp_noise1.0", "gap": 0.008549999999999983, "auc": 0.5040711666666666, "test_acc": 0.9746666666666667}, {"config": "dp_noise3.0", "gap": 0.0013499999999999994, "auc": 0.4989121944444445, "test_acc": 0.9473333333333334}]}, "adversarial": {"baseline": {"clean_acc": 0.9834166666666667, "pgd": {"0.02": 0.9662499999999999, "0.05": 0.9215833333333334, "0.1": 0.73025, "0.2": 0.028}, "fgsm": {"0.02": 0.968, "0.05": 0.93425, "0.1": 0.8370000000000001, "0.2": 0.42}}, "pgd_adversarial_training": {"clean_acc": 0.96975, "pgd": {"0.02": 0.9565, "0.05": 0.928, "0.1": 0.8390833333333334, "0.2": 0.4071666666666667}, "fgsm": {"0.02": 0.957, "0.05": 0.9315000000000001, "0.1": 0.864, "0.2": 0.617}}, "label_smoothing": {"clean_acc": 0.9871666666666666, "pgd": {"0.02": 0.9753333333333334, "0.05": 0.92875, "0.1": 0.66, "0.2": 0.009000000000000001}, "fgsm": {"0.02": 0.977, "0.05": 0.952, "0.1": 0.8525, "0.2": 0.44475}}}, "lifecycle": [{"scenario": "benign_redeploy", "verdict": "PASS", "desc": ""}, {"scenario": "tampered_artifact", "verdict": "TAMPER_DETECTED", "desc": "1-ulp float modification at byte offset 3926 (1.0520147103221378e-35 -> 1.0520147820686192e-35)"}, {"scenario": "tampered + forged_key_recompute", "verdict": "TAMPER_DETECTED", "desc": ""}], "behavior": {"tampered_accuracy": 0.983, "approved_accuracy": 0.983, "prediction_disagreement_rate": 0.0, "accuracy_would_flag_it": false, "note": "1-ulp tampering is behaviorally near-invisible; integrity checks are the only reliable control"}, "tradeoffs": {"privacy_pareto": [{"defense": "epochs=1", "clean_accuracy": 0.96775, "mia_auc": 0.5000034583333334}, {"defense": "epochs=2", "clean_accuracy": 0.9792500000000001, "mia_auc": 0.5014149458333333}, {"defense": "epochs=4", "clean_accuracy": 0.9834999999999999, "mia_auc": 0.5021450166666667}, {"defense": "epochs=8", "clean_accuracy": 0.98475, "mia_auc": 0.5053194}, {"defense": "label_smoothing(0.1)", "clean_accuracy": 0.9869166666666667, "mia_auc": 0.50542045}, {"defense": "label_smoothing(0.3)", "clean_accuracy": 0.9874999999999999, "mia_auc": 0.5071773166666667}, {"defense": "dp_grad_clip+noise(0.5)", "clean_accuracy": 0.9747499999999999, "mia_auc": 0.4989808041666666}, {"defense": "dp_grad_clip+noise(1.0)", "clean_accuracy": 0.9656666666666668, "mia_auc": 0.49731921250000005}, {"defense": "dp_grad_clip+noise(2.0)", "clean_accuracy": 0.9428333333333333, "mia_auc": 0.4968849708333334}], "robustness_pareto": [{"defense": "baseline", "clean_accuracy": 0.9834166666666667, "robust_accuracy_pgd_eps0.1": 0.73025}, {"defense": "label_smoothing", "clean_accuracy": 0.9871666666666666, "robust_accuracy_pgd_eps0.1": 0.66}, {"defense": "pgd_adversarial_training", "clean_accuracy": 0.96975, "robust_accuracy_pgd_eps0.1": 0.8390833333333334}], "extraction_policies": [{"policy": "full_confidence", "budget": 2000, "fidelity": 0.9556666666666667, "sub_accuracy": 0.9466666666666667}, {"policy": "rounded", "budget": 2000, "fidelity": 0.955, "sub_accuracy": 0.9470000000000001}, {"policy": "argmax_only", "budget": 2000, "fidelity": 0.9466666666666667, "sub_accuracy": 0.9396666666666667}, {"policy": "full_confidence", "budget": 4000, "fidelity": 0.9673333333333334, "sub_accuracy": 0.9573333333333333}, {"policy": "rounded", "budget": 4000, "fidelity": 0.9646666666666667, "sub_accuracy": 0.9576666666666666}, {"policy": "argmax_only", "budget": 4000, "fidelity": 0.96, "sub_accuracy": 0.9536666666666666}, {"policy": "full_confidence+ratelimit1000", "budget": 2000, "fidelity": 0.912, "sub_accuracy": 0.902}, {"policy": "full_confidence+ratelimit1000", "budget": 4000, "fidelity": 0.922, "sub_accuracy": 0.912}]}, "formula": "risk = normalized measured attacker success under undefended configuration, 0-100; defense columns measured under the best defense from this run. Weights fixed a priori: poisoning 0.4*acc_drop/0.15 + 0.35*transfer + 0.25*(1-recall); backdoor = ASR x (0.5 + 0.5*stealth); extraction = fidelity; membership = 2*(AUC-0.5); adversarial = PGD success at eps=0.1; supply-chain = 1 - P(behavioral check catches 1-ulp tamper).", "cross": {"attacks": ["poison", "backdoor", "extraction", "mia", "adversarial"], "rows": [{"label": "None (baseline)", "stats": [{"mean": 0.0, "std": 0.0, "band": 7.18, "class": "0"}, {"mean": 0.0, "std": 0.0, "band": 0.14, "class": "0"}, {"mean": 0.0, "std": 0.0, "band": 1.72, "class": "0"}, {"mean": 0.0, "std": 0.0, "band": 0.37, "class": "0"}, {"mean": 0.0, "std": 0.0, "band": 6.96, "class": "0"}], "raw": {"clean_acc": 0.9830833333333334, "ece": 0.0047665552298227845, "mia_auc": 0.501267075, "fidelity": 0.9659999999999999, "pgd_succ": 0.27366666666666667, "src_acc": 0.9825, "transfer": 0.0025, "asr": 0.9993333333333334, "overhead": 1.0, "clean_drop": 0.0}}, {"label": "Poisoning defense (audit-filter)", "stats": [{"mean": 1.25, "std": 3.29, "band": 10.87, "class": "0"}, {"mean": 0.05, "std": 0.16, "band": 0.41, "class": "0"}, {"mean": 0.27, "std": 1.21, "band": 3.45, "class": "0"}, {"mean": -0.0, "std": 0.34, "band": 0.93, "class": "0"}, {"mean": -0.96, "std": 2.45, "band": 9.24, "class": "0"}], "raw": {"clean_acc": 0.9749166666666667, "ece": 0.009658479653298883, "mia_auc": 0.5012847583333334, "fidelity": 0.9633333333333333, "pgd_succ": 0.28325, "src_acc": 0.9783333333333334, "transfer": 0.010833333333333334, "asr": 0.9988333333333334, "overhead": 2.03, "clean_drop": 0.008166666666666766}}, {"label": "Adversarial training", "stats": [{"mean": -0.96, "std": 5.13, "band": 14.63, "class": "0"}, {"mean": -0.07, "std": 0.06, "band": 0.2, "class": "0"}, {"mean": -0.53, "std": 0.49, "band": 2.11, "class": "0"}, {"mean": 0.25, "std": 0.15, "band": 0.53, "class": "0"}, {"mean": 12.31, "std": 2.35, "band": 9.09, "class": "+"}], "raw": {"clean_acc": 0.9706666666666667, "ece": 0.013913015925635852, "mia_auc": 0.4960093666666667, "fidelity": 0.9713333333333333, "pgd_succ": 0.15058333333333332, "src_acc": 0.98, "transfer": 0.005, "asr": 1.0, "overhead": 5.23, "clean_drop": 0.012416666666666742}}, {"label": "DP-style clip+noise", "stats": [{"mean": -3.92, "std": 6.78, "band": 18.32, "class": "0"}, {"mean": 0.54, "std": 0.64, "band": 1.59, "class": "0"}, {"mean": -1.0, "std": 0.1, "band": 1.74, "class": "0"}, {"mean": 0.24, "std": 0.16, "band": 0.55, "class": "0"}, {"mean": -5.5, "std": 6.5, "band": 17.59, "class": "?"}], "raw": {"clean_acc": 0.9653333333333333, "ece": 0.005281547347704582, "mia_auc": 0.49796165416666666, "fidelity": 0.976, "pgd_succ": 0.32866666666666666, "src_acc": 0.9641666666666667, "transfer": 0.005833333333333334, "asr": 0.9939166666666667, "overhead": 1.33, "clean_drop": 0.017750000000000155}}, {"label": "Label smoothing", "stats": [{"mean": 0.71, "std": 2.63, "band": 9.71, "class": "0"}, {"mean": -0.07, "std": 0.06, "band": 0.2, "class": "0"}, {"mean": -1.23, "std": 0.85, "band": 2.73, "class": "0"}, {"mean": -0.86, "std": 0.94, "band": 2.35, "class": "0"}, {"mean": 0.06, "std": 0.53, "band": 7.08, "class": "0"}], "raw": {"clean_acc": 0.987, "ece": 0.10946882788464425, "mia_auc": 0.5055909208333333, "fidelity": 0.9783333333333334, "pgd_succ": 0.27308333333333334, "src_acc": 0.9908333333333333, "transfer": 0.005, "asr": 1.0, "overhead": 1.15, "clean_drop": -0.003916666666666568}}]}};
+
+const C = {safe:'#3DDC97', warn:'#F2B544', risk:'#FF5C6C', accent:'#5AA9FF', muted:'#93A1B8',
+           faint:'#5C6C86', line:'#22314B', ink:'#E9EEF7'};
+
+function fmt(x, d=3){ return x==null ? '—' : (typeof x === 'number' ? x.toFixed(d) : x); }
+function pct(x, d=1){ return x==null ? '—' : (100*x).toFixed(d>=0?Math.min(d,1):1) + '%'; }
+
+/* ---------- KPI tiles ---------- */
+const K = DATA.profile;
+const kpis = [
+  ['Poisoning', K.poisoning.risk_undefended, K.poisoning.defense, 'src-acc '+pct(K.poisoning.defense_recovery)],
+  ['Backdoor', K.backdoor.risk_undefended, 'data-level audit ineffective', 'ASR stays '+pct(K.backdoor.defense_asr)],
+  ['Extraction', K.extraction.risk_undefended, 'rate limit caps at '+pct(K.extraction.defense_fidelity)],
+  ['Membership', K.membership_inference.risk_undefended, 'AUC→'+fmt(K.membership_inference.defense_auc,3)+' under DP-style noise'],
+  ['Adversarial', K.adversarial_examples.risk_undefended, 'AT: success →'+pct(K.adversarial_examples.defense_success_rate)],
+  ['Supply chain', K.supply_chain.risk_undefended, 'hash+HMAC residual 0'],
+];
+document.getElementById('kpis').innerHTML = kpis.map(([name, risk, def]) => {
+  const col = risk > 66 ? C.risk : risk > 33 ? C.warn : C.safe;
+  return `<div class="tile">
+    <div class="name">${name}</div>
+    <div class="score" style="color:${col}">${risk.toFixed(1)}</div>
+    <div class="bar"><i style="width:${Math.min(100, risk)}%; background:${col}"></i></div>
+    <div class="def mono">${def}</div>
+  </div>`;
+}).join('');
+
+/* ---------- generic SVG line chart ---------- */
+function lineChart(el, series, xLabels, opts={}){
+  const W = 520, H = 260, padL = 44, padB = 30, padT = 14, padR = 14;
+  const el0 = document.getElementById(el);
+  const maxY = opts.maxY != null ? opts.maxY : Math.max(...series.flatMap(s => s.ys)) * 1.08;
+  const xs = i => padL + i * (W - padL - padR) / Math.max(1, xLabels.length - 1);
+  const ys = v => padT + (H - padT - padB) * (1 - v / maxY);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%; min-width:420px; display:block">`;
+  for (const [i, lbl] of xLabels.entries()) {
+    svg += `<line x1="${xs(i)}" y1="${padT}" x2="${xs(i)}" y2="${H - padB}" stroke="${C.line}" stroke-width="1" opacity="0.5"/>`;
+    svg += `<text x="${xs(i)}" y="${H - 10}" fill="${C.faint}" font-size="10" text-anchor="middle">${lbl}</text>`;
+  }
+  for (const t of opts.yTicks || [0, 0.5, 1]) {
+    if (t > maxY) continue;
+    svg += `<line x1="${padL}" y1="${ys(t)}" x2="${W - padR}" y2="${ys(t)}" stroke="${C.line}" stroke-width="1" opacity="0.5"/>`;
+    svg += `<text x="${padL - 6}" y="${ys(t) + 3}" fill="${C.faint}" font-size="10" text-anchor="end">${opts.yFmt ? opts.yFmt(t) : t}</text>`;
+  }
+  for (const s of series) {
+    const pts = s.ys.map((v, i) => `${xs(i)},${ys(v)}`).join(' ');
+    if (s.fill) {
+      const area = `${padL},${ys(0)} ${pts} ${xs(s.ys.length - 1)},${ys(0)}`;
+      svg += `<polygon points="${area}" fill="${s.color}" opacity="0.08" />`;
+    }
+    svg += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2" ${s.dash?'stroke-dasharray="5 4"':''} stroke-linejoin="round"/>`;
+    svg += s.ys.map((v, i) => `<circle cx="${xs(i)}" cy="${ys(v)}" r="3" fill="${s.color}"/>`).join('');
+  }
+  el0.innerHTML = svg + '</svg>';
+  return {xs, ys, padL, W};
+}
+
+/* ---------- 01 poisoning ---------- */
+const P = DATA.poisoning;
+lineChart('ch_poison', [
+  {label:'src→tgt transfer', color:C.risk, ys:P.transfer},
+  {label:'ECE', color:C.warn, ys:P.ece},
+  {label:'clean acc', color:C.safe, ys:P.clean_acc},
+], P.fractions.map(f => (100*f)+'%'), {yFmt: t => t.toFixed(2), yTicks:[0, 0.01, 0.02, 1.0], maxY:1.02});
+document.getElementById('t_poison').innerHTML =
+  '<tr><th>Poison %</th><th class="num">Clean acc</th><th class="num">Src-class acc</th><th class="num">ECE</th><th class="num">Audit recall</th></tr>' +
+  P.fractions.map((f, i) => `<tr>
+    <td>${(100*f).toFixed(0)}%</td><td class="num">${fmt(P.clean_acc[i],4)}</td>
+    <td class="num">${fmt(P.src_acc[i],4)}</td><td class="num">${fmt(P.ece[i],4)}</td>
+    <td class="num">${f===0?'—':fmt(P.detect_recall[f])}</td></tr>`).join('');
+document.getElementById('d_rec').textContent = fmt(P.detect_recall[0.05]);
+document.getElementById('d_def').textContent = fmt(P.defense_src, 4);
+
+/* ---------- 02 backdoor ---------- */
+const B = DATA.backdoor;
+lineChart('ch_bd', [
+  {label:'attack success rate', color:C.risk, ys:B.asr},
+  {label:'clean accuracy', color:C.safe, ys:B.clean_acc},
+  {label:'flip-scan to target', color:C.warn, ys:B.flip_scan},
+], B.fractions.map(f => (100*f)+'%'), {maxY:1.05, yFmt:t=>pct(t,0), yTicks:[0,0.5,1]});
+document.getElementById('t_bd').innerHTML =
+  '<tr><th>Poison %</th><th class="num">Clean acc</th><th class="num">ASR</th><th class="num">Flip scan</th></tr>' +
+  B.fractions.map((f, i) => `<tr><td>${(100*f).toFixed(0)}%</td>
+    <td class="num">${fmt(B.clean_acc[i],4)}</td><td class="num ${i?'bad':''}">${fmt(B.asr[i],4)}</td>
+    <td class="num">${fmt(B.flip_scan[i])}</td></tr>`).join('');
+document.getElementById('bd_rec').textContent = pct(B.defense_recovered, 0);
+document.getElementById('bd_asr2').textContent = pct(B.defense_asr, 1);
+document.getElementById('bd_scan').textContent = fmt(B.flip_scan[B.flip_scan.length-1]);
+
+/* ---------- 03 extraction ---------- */
+const E = DATA.extraction;
+lineChart('ch_ex', [
+  {label:'full confidence', color:C.risk, ys:E.series.full_confidence},
+  {label:'rounded', color:C.warn, ys:E.series.rounded},
+  {label:'argmax only', color:C.accent, ys:E.series.argmax_only},
+], E.budgets.map(b => b.toLocaleString()), {maxY:1.05, yFmt:t=>pct(t,0), yTicks:[0.5,0.75,0.9,1.0]});
+document.getElementById('ex_acc').textContent = fmt(E.target_acc, 4);
+const gapFid = E.series.full_confidence[3] - E.series.argmax_only[3];
+document.getElementById('ex_gap').textContent = (100*gapFid).toFixed(1) + 'pt';
+const rlVals = Object.values(E.ratelimit);
+document.getElementById('ex_rl').textContent = pct(Math.max(...rlVals), 1);
+
+/* ---------- 04 privacy ---------- */
+document.getElementById('t_mia').innerHTML =
+  '<tr><th>Epochs (20k)</th><th class="num">Overfit gap</th><th class="num">MIA AUC</th><th class="num">TPR@5%FPR</th></tr>' +
+  DATA.privacy.epoch_study.map(r => `<tr><td>${r.epochs}</td><td class="num">${fmt(r.gap,4)}</td>
+    <td class="num">${fmt(r.auc,4)}</td><td class="num">${fmt(r.tpr,4)}</td></tr>`).join('');
+document.getElementById('t_dp').innerHTML =
+  '<tr><th>Config (3k, 20 ep)</th><th class="num">Gap</th><th class="num">AUC</th><th class="num">Test acc</th></tr>' +
+  DATA.privacy.small_study.map(r => `<tr><td>${r.config}</td><td class="num">${fmt(r.gap,4)}</td>
+    <td class="num">${fmt(r.auc,4)}</td><td class="num">${fmt(r.test_acc,4)}</td></tr>`).join('');
+const sm = Object.fromEntries(DATA.privacy.small_study.map(r => [r.config, r]));
+document.getElementById('dp_gap').textContent = fmt(sm.baseline_long.gap, 4);
+document.getElementById('dp_gap3').textContent = fmt(sm['dp_noise3.0'].gap, 4);
+document.getElementById('dp_cost').textContent = ((sm.baseline.test_acc - sm['dp_noise3.0'].test_acc)*100).toFixed(1) + 'pt';
+
+/* ---------- 05 adversarial ---------- */
+const A = DATA.adversarial;
+const EPS = [0.02, 0.05, 0.1, 0.2];
+const atEps = (obj, keys) => keys.map(k => obj[k]);
+lineChart('ch_adv', [
+  {label:'baseline', color:C.risk, ys:atEps(A.baseline.pgd, EPS)},
+  {label:'PGD-AT', color:C.safe, ys:atEps(A.pgd_adversarial_training.pgd, EPS)},
+  {label:'label smoothing', color:C.faint, ys:atEps(A.label_smoothing.pgd, EPS), dash:1},
+], EPS, {maxY:1.05, yFmt:t=>pct(t,0), yTicks:[0,0.5,1]});
+document.getElementById('t_adv').innerHTML =
+  '<tr><th>Model</th><th class="num">Clean</th><th class="num">ε=.05</th><th class="num">ε=.1</th><th class="num">ε=.2</th></tr>' +
+  [['baseline', A.baseline], ['PGD-AT', A.pgd_adversarial_training], ['label smoothing', A.label_smoothing]]
+  .map(([n, m]) => `<tr><td>${n}</td><td class="num">${fmt(m.clean_acc,4)}</td>
+    <td class="num">${fmt(m.pgd[0.05],4)}</td><td class="num">${fmt(m.pgd[0.1],4)}</td>
+    <td class="num">${fmt(m.pgd[0.2],4)}</td></tr>`).join('');
+document.getElementById('at_gain').textContent =
+  '+' + Math.round((A.pgd_adversarial_training.pgd[0.1] - A.baseline.pgd[0.1]) * 100) + 'pt';
+document.getElementById('at_cost').textContent =
+  '−' + Math.round((A.baseline.clean_acc - A.pgd_adversarial_training.clean_acc) * 100) + 'pt';
+
+/* ---------- 06 supply chain ---------- */
+document.getElementById('t_sc').innerHTML =
+  '<tr><th>Scenario</th><th>Verdict</th><th>Detail</th></tr>' +
+  DATA.lifecycle.map(r => `<tr><td>${r.scenario}</td>
+    <td><span class="verdict ${r.verdict === 'PASS' ? 'pass' : 'fail'}">${r.verdict}</span></td>
+    <td style="color:var(--muted)">${r.desc || 'byte-identical artifact, recomputed hash + HMAC match'}</td></tr>`).join('');
+document.getElementById('sc_dis').textContent = pct(DATA.lifecycle.length ? DATA.behavior.prediction_disagreement_rate : 0, 1);
+
+/* ---------- 08 cross-threat Δ-security matrix ---------- */
+(function(){
+  const X = DATA.cross;
+  if (!X) { document.getElementById('sec_ctm').hidden = true; return; }
+  document.getElementById('ctm').hidden = false;
+  const names = {poison:'Poison', backdoor:'Backdoor', extraction:'Extract', mia:'MIA', adversarial:'Adv'};
+  const rows = X.rows, defenses = rows.slice(1), base = rows[0];
+  let svg = '<svg viewBox="0 0 640 ' + (64 + 34*defenses.length) + '" style="width:100%; min-width:520px; display:block">';
+  const cw = 100, ch = 34, x0 = 132, y0 = 40;
+  X.attacks.forEach((a, j) => {
+    svg += `<text x="${x0 + j*cw + cw/2}" y="24" fill="${C.muted}" font-size="11" text-anchor="middle">${names[a]}</text>`;
+  });
+  defenses.forEach((d, i) => {
+    svg += `<text x="${x0 - 8}" y="${y0 + i*ch + ch/2 + 4}" fill="${C.muted}" font-size="11" text-anchor="end">${d.label}</text>`;
+    d.stats.forEach((s, j) => {
+      const sig = s.class === '+' || s.class === '-';
+      const col = s.class === '+' ? C.safe : s.class === '-' ? C.risk : sig ? '' : C.muted;
+      const fill = s.class === '+' ? 'rgba(61,220,151,0.18)' : s.class === '-' ? 'rgba(255,92,108,0.18)' : 'rgba(34,49,75,0.35)';
+      svg += `<rect x="${x0 + j*cw + 3}" y="${y0 + i*ch + 3}" width="${cw - 6}" height="${ch - 6}" rx="4"
+        fill="${fill}" stroke="${s.class === '+' ? C.safe : s.class === '-' ? C.risk : C.line}" stroke-width="1"/>`;
+      svg += `<text x="${x0 + j*cw + cw/2}" y="${y0 + i*ch + ch/2 - 1}" fill="${sig ? col : C.ink}"
+        font-size="11.5" text-anchor="middle">${s.mean > 0 ? '+' : ''}${s.mean.toFixed(1)} ${s.class}</text>`;
+      svg += `<text x="${x0 + j*cw + cw/2}" y="${y0 + i*ch + ch/2 + 9}" fill="${C.faint}"
+        font-size="9" text-anchor="middle">±${s.std.toFixed(1)}</text>`;
+    });
+  });
+  document.getElementById('heatmap').innerHTML = svg + '</svg>';
+
+  document.getElementById('t_ctm').innerHTML =
+    '<tr><th>Defense</th><th class="num">Clean acc</th><th class="num">MIA AUC</th><th class="num">Extract fid</th>' +
+    '<th class="num">PGD succ ε=.1</th><th class="num">Poison src-acc</th><th class="num">Backdoor ASR</th><th class="num">Train ×</th></tr>' +
+    rows.map(r => { const w = r.raw; return `<tr><td>${r.label}</td>
+      <td class="num">${fmt(w.clean_acc,4)}</td><td class="num">${fmt(w.mia_auc,4)}</td>
+      <td class="num">${fmt(w.fidelity,4)}</td><td class="num">${fmt(w.pgd_succ,4)}</td>
+      <td class="num">${fmt(w.src_acc,4)}</td>
+      <td class="num ${w.asr > base.raw.asr ? 'bad' : w.asr < base.raw.asr - 0.05 ? 'good' : ''}">${fmt(w.asr,4)}</td>
+      <td class="num">${w.overhead.toFixed(2)}×</td></tr>`; }).join('');
+
+  /* findings derived from the measured matrix itself */
+  const flat = [];
+  defenses.forEach(d => d.stats.forEach((s, j) => flat.push([s, d.label, names[X.attacks[j]]])));
+  const sig = flat.filter(s => s[0].class === '+' || s[0].class === '-').sort((a, b) => b[0].mean - a[0].mean);
+  const best = sig.find(s => s[0].class === '+');
+  const worst = sig.slice().reverse().find(s => s[0].class === '-');
+  let html = '';
+  if (sig.length) {
+    if (best) html += `<b>Significant transfer:</b> ${best[2]} under ${best[1]} (ΔS ${best[0].mean>0?'+':''}${best[0].mean.toFixed(1)} ± ${best[0].std.toFixed(1)}) · `;
+    if (worst) html += `<b>significant adverse interaction:</b> ${worst[2]} under ${worst[1]} (ΔS ${worst[0].mean.toFixed(1)} ± ${worst[0].std.toFixed(1)})`;
+    html += `<br>`;
+  } else {
+    html += `<b>No cell resolves beyond the 3-seed noise band yet</b> — the paired-t intervals are honest about it. `;
+  }
+  const bdRow = defenses.find(d => d.label.startsWith('Poisoning'));
+  if (bdRow) {
+    const bdDelta = base.raw.asr - bdRow.raw.asr;
+    html += `<b>Poison-defense → backdoor:</b> audit-filter moves backdoor ASR from `
+      + `${fmt(base.raw.asr,4)} to ${fmt(bdRow.raw.asr,4)} `
+      + (Math.abs(bdDelta) < 0.02 ? '(essentially unchanged — data-level filtering does not reach backdoors)' : '');
+  }
+  document.getElementById('ctm_finding').innerHTML = html;
+  document.getElementById('ctm_finding').hidden = false;
+})();
+
+document.getElementById('formula').textContent = DATA.formula;
+</script>

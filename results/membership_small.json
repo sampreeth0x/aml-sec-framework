@@ -1,0 +1,377 @@
+{
+  "timestamp": "2026-09-11 17:50:27",
+  "runs": [
+    {
+      "config": "baseline",
+      "seed": 0,
+      "train_accuracy": 0.9955,
+      "test_accuracy": 0.9845,
+      "overfit_gap": 0.01100000000000001,
+      "mia": {
+        "confidence": {
+          "auc": 0.49989466666666665,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "neg_loss": {
+          "auc": 0.49989466666666665,
+          "threshold": 0.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "margin": {
+          "auc": 0.50025725,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "best": "margin"
+      }
+    },
+    {
+      "config": "baseline",
+      "seed": 1,
+      "train_accuracy": 0.99805,
+      "test_accuracy": 0.989,
+      "overfit_gap": 0.009050000000000002,
+      "mia": {
+        "confidence": {
+          "auc": 0.514169,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "neg_loss": {
+          "auc": 0.514169,
+          "threshold": 0.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "margin": {
+          "auc": 0.5142998333333333,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "best": "margin"
+      }
+    },
+    {
+      "config": "baseline",
+      "seed": 2,
+      "train_accuracy": 0.99625,
+      "test_accuracy": 0.983,
+      "overfit_gap": 0.013249999999999984,
+      "mia": {
+        "confidence": {
+          "auc": 0.5053555,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "neg_loss": {
+          "auc": 0.5053555,
+          "threshold": 0.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "margin": {
+          "auc": 0.5061115,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "best": "margin"
+      }
+    },
+    {
+      "config": "baseline_long",
+      "seed": 0,
+      "train_accuracy": 0.99555,
+      "test_accuracy": 0.98425,
+      "overfit_gap": 0.011300000000000088,
+      "mia": {
+        "confidence": {
+          "auc": 0.5025045833333334,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "neg_loss": {
+          "auc": 0.5025045833333334,
+          "threshold": 0.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "margin": {
+          "auc": 0.5015450833333334,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "best": "confidence"
+      }
+    },
+    {
+      "config": "baseline_long",
+      "seed": 1,
+      "train_accuracy": 0.9976,
+      "test_accuracy": 0.981,
+      "overfit_gap": 0.01660000000000006,
+      "mia": {
+        "confidence": {
+          "auc": 0.5077293333333334,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "neg_loss": {
+          "auc": 0.5077293333333334,
+          "threshold": 0.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "margin": {
+          "auc": 0.5076590833333333,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "best": "confidence"
+      }
+    },
+    {
+      "config": "baseline_long",
+      "seed": 2,
+      "train_accuracy": 0.99945,
+      "test_accuracy": 0.98825,
+      "overfit_gap": 0.011199999999999988,
+      "mia": {
+        "confidence": {
+          "auc": 0.512721,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "neg_loss": {
+          "auc": 0.512721,
+          "threshold": 0.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "margin": {
+          "auc": 0.5104908333333333,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "best": "confidence"
+      }
+    },
+    {
+      "config": "dp_noise1.0",
+      "seed": 0,
+      "train_accuracy": 0.9814,
+      "test_accuracy": 0.9745,
+      "overfit_gap": 0.006900000000000017,
+      "mia": {
+        "confidence": {
+          "auc": 0.50476275,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "neg_loss": {
+          "auc": 0.50476275,
+          "threshold": 0.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "margin": {
+          "auc": 0.5053794166666666,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "best": "margin"
+      }
+    },
+    {
+      "config": "dp_noise1.0",
+      "seed": 1,
+      "train_accuracy": 0.98315,
+      "test_accuracy": 0.9755,
+      "overfit_gap": 0.007649999999999935,
+      "mia": {
+        "confidence": {
+          "auc": 0.5088538333333333,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "neg_loss": {
+          "auc": 0.5088538333333333,
+          "threshold": 0.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "margin": {
+          "auc": 0.509411,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "best": "margin"
+      }
+    },
+    {
+      "config": "dp_noise1.0",
+      "seed": 2,
+      "train_accuracy": 0.9851,
+      "test_accuracy": 0.974,
+      "overfit_gap": 0.011099999999999999,
+      "mia": {
+        "confidence": {
+          "auc": 0.49619875,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "neg_loss": {
+          "auc": 0.49619875,
+          "threshold": 0.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "margin": {
+          "auc": 0.49742308333333335,
+          "threshold": 1.0,
+          "tpr": 0.0,
+          "fpr": 0.0,
+          "accuracy": 0.7272727272727273
+        },
+        "best": "margin"
+      }
+    },
+    {
+      "config": "dp_noise3.0",
+      "seed": 0,
+      "train_accuracy": 0.9528,
+      "test_accuracy": 0.9495,
+      "overfit_gap": 0.0032999999999999696,
+      "mia": {
+        "confidence": {
+          "auc": 0.4912039166666667,
+          "threshold": 0.9999996423721313,
+          "tpr": 0.04066666666666666,
+          "fpr": 0.04325,
+          "accuracy": 0.7069090909090909
+        },
+        "neg_loss": {
+          "auc": 0.4912039166666667,
+          "threshold": -3.576279254957626e-07,
+          "tpr": 0.04066666666666666,
+          "fpr": 0.04325,
+          "accuracy": 0.7069090909090909
+        },
+        "margin": {
+          "auc": 0.49176983333333335,
+          "threshold": 0.9999992847442627,
+          "tpr": 0.04933333333333333,
+          "fpr": 0.05,
+          "accuracy": 0.7043636363636364
+        },
+        "best": "margin"
+      }
+    },
+    {
+      "config": "dp_noise3.0",
+      "seed": 1,
+      "train_accuracy": 0.95195,
+      "test_accuracy": 0.952,
+      "overfit_gap": -4.999999999999449e-05,
+      "mia": {
+        "confidence": {
+          "auc": 0.5088154166666666,
+          "threshold": 0.9999998807907104,
+          "tpr": 0.044,
+          "fpr": 0.043,
+          "accuracy": 0.708
+        },
+        "neg_loss": {
+          "auc": 0.5088154166666666,
+          "threshold": -1.1920930376163597e-07,
+          "tpr": 0.044,
+          "fpr": 0.043,
+          "accuracy": 0.708
+        },
+        "margin": {
+          "auc": 0.5094808333333334,
+          "threshold": 0.9999998211860657,
+          "tpr": 0.044,
+          "fpr": 0.043,
+          "accuracy": 0.708
+        },
+        "best": "margin"
+      }
+    },
+    {
+      "config": "dp_noise3.0",
+      "seed": 2,
+      "train_accuracy": 0.9413,
+      "test_accuracy": 0.9405,
+      "overfit_gap": 0.0008000000000000229,
+      "mia": {
+        "confidence": {
+          "auc": 0.49507191666666667,
+          "threshold": 0.9999998807907104,
+          "tpr": 0.042666666666666665,
+          "fpr": 0.04275,
+          "accuracy": 0.7078181818181818
+        },
+        "neg_loss": {
+          "auc": 0.49507191666666667,
+          "threshold": -1.1920930376163597e-07,
+          "tpr": 0.042666666666666665,
+          "fpr": 0.04275,
+          "accuracy": 0.7078181818181818
+        },
+        "margin": {
+          "auc": 0.4954859166666667,
+          "threshold": 0.9999998211860657,
+          "tpr": 0.042666666666666665,
+          "fpr": 0.04325,
+          "accuracy": 0.7074545454545454
+        },
+        "best": "margin"
+      }
+    }
+  ]
+}

@@ -1,0 +1,216 @@
+{
+  "config": {
+    "target_class": 0,
+    "box": [
+      0,
+      0,
+      3,
+      3
+    ],
+    "fractions": [
+      0.0,
+      0.01,
+      0.03,
+      0.05
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ]
+  },
+  "timestamp": "2026-09-11 17:35:25",
+  "runs": [
+    {
+      "fraction": 0.0,
+      "seed": 0,
+      "clean_accuracy": 0.98425,
+      "attack_success_rate": 0.101,
+      "stealth_gap": 0.0003333333333332966,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3937,
+        "flip_rate_on_correct": 0.004318008636017272,
+        "flip_rate_to_target": 0.0,
+        "target_share_of_flips": 0.0
+      },
+      "train_seconds": 51.68292450904846
+    },
+    {
+      "fraction": 0.0,
+      "seed": 1,
+      "clean_accuracy": 0.98575,
+      "attack_success_rate": 0.10075,
+      "stealth_gap": 0.0018333333333333535,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3943,
+        "flip_rate_on_correct": 0.002789753994420492,
+        "flip_rate_to_target": 0.0,
+        "target_share_of_flips": 0.0
+      },
+      "train_seconds": 64.98120474815369
+    },
+    {
+      "fraction": 0.0,
+      "seed": 2,
+      "clean_accuracy": 0.98175,
+      "attack_success_rate": 0.1045,
+      "stealth_gap": -0.00216666666666665,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3927,
+        "flip_rate_on_correct": 0.0030557677616501145,
+        "flip_rate_to_target": 0.0007639419404125286,
+        "target_share_of_flips": 0.25
+      },
+      "train_seconds": 52.92099690437317
+    },
+    {
+      "fraction": 0.01,
+      "seed": 0,
+      "clean_accuracy": 0.9815,
+      "attack_success_rate": 1.0,
+      "stealth_gap": -0.0024166666666666226,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3926,
+        "flip_rate_on_correct": 0.8991339786041773,
+        "flip_rate_to_target": 0.8991339786041773,
+        "target_share_of_flips": 1.0
+      },
+      "train_seconds": 46.43197512626648
+    },
+    {
+      "fraction": 0.01,
+      "seed": 1,
+      "clean_accuracy": 0.98525,
+      "attack_success_rate": 0.994,
+      "stealth_gap": 0.0013333333333332975,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3941,
+        "flip_rate_on_correct": 0.8934280639431617,
+        "flip_rate_to_target": 0.8934280639431617,
+        "target_share_of_flips": 1.0
+      },
+      "train_seconds": 41.754356145858765
+    },
+    {
+      "fraction": 0.01,
+      "seed": 2,
+      "clean_accuracy": 0.97975,
+      "attack_success_rate": 0.99975,
+      "stealth_gap": -0.004166666666666652,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3919,
+        "flip_rate_on_correct": 0.8984434804797142,
+        "flip_rate_to_target": 0.8984434804797142,
+        "target_share_of_flips": 1.0
+      },
+      "train_seconds": 44.58933091163635
+    },
+    {
+      "fraction": 0.03,
+      "seed": 0,
+      "clean_accuracy": 0.98025,
+      "attack_success_rate": 1.0,
+      "stealth_gap": -0.003666666666666707,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3921,
+        "flip_rate_on_correct": 0.8990053557765876,
+        "flip_rate_to_target": 0.8990053557765876,
+        "target_share_of_flips": 1.0
+      },
+      "train_seconds": 37.790533781051636
+    },
+    {
+      "fraction": 0.03,
+      "seed": 1,
+      "clean_accuracy": 0.98425,
+      "attack_success_rate": 0.99925,
+      "stealth_gap": 0.0003333333333332966,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3937,
+        "flip_rate_on_correct": 0.8981457962915926,
+        "flip_rate_to_target": 0.8981457962915926,
+        "target_share_of_flips": 1.0
+      },
+      "train_seconds": 60.26238179206848
+    },
+    {
+      "fraction": 0.03,
+      "seed": 2,
+      "clean_accuracy": 0.98025,
+      "attack_success_rate": 1.0,
+      "stealth_gap": -0.003666666666666707,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3921,
+        "flip_rate_on_correct": 0.8987503187962255,
+        "flip_rate_to_target": 0.8987503187962255,
+        "target_share_of_flips": 1.0
+      },
+      "train_seconds": 67.36378479003906
+    },
+    {
+      "fraction": 0.05,
+      "seed": 0,
+      "clean_accuracy": 0.98325,
+      "attack_success_rate": 1.0,
+      "stealth_gap": -0.0006666666666667043,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3933,
+        "flip_rate_on_correct": 0.8993135011441648,
+        "flip_rate_to_target": 0.8993135011441648,
+        "target_share_of_flips": 1.0
+      },
+      "train_seconds": 50.92044258117676
+    },
+    {
+      "fraction": 0.05,
+      "seed": 1,
+      "clean_accuracy": 0.985,
+      "attack_success_rate": 0.9975,
+      "stealth_gap": 0.001083333333333325,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3940,
+        "flip_rate_on_correct": 0.8967005076142132,
+        "flip_rate_to_target": 0.8967005076142132,
+        "target_share_of_flips": 1.0
+      },
+      "train_seconds": 42.24213790893555
+    },
+    {
+      "fraction": 0.05,
+      "seed": 2,
+      "clean_accuracy": 0.97875,
+      "attack_success_rate": 1.0,
+      "stealth_gap": -0.005166666666666653,
+      "trigger_flip_scan": {
+        "n_correct_clean": 3915,
+        "flip_rate_on_correct": 0.8988505747126436,
+        "flip_rate_to_target": 0.8988505747126436,
+        "target_share_of_flips": 1.0
+      },
+      "train_seconds": 46.81653904914856
+    }
+  ],
+  "defense": [
+    {
+      "seed": 0,
+      "dropped": 1000,
+      "poison_recovered": 0.489,
+      "clean_accuracy": 0.972,
+      "attack_success_rate": 1.0
+    },
+    {
+      "seed": 1,
+      "dropped": 1000,
+      "poison_recovered": 0.486,
+      "clean_accuracy": 0.97925,
+      "attack_success_rate": 0.999
+    },
+    {
+      "seed": 2,
+      "dropped": 1000,
+      "poison_recovered": 0.501,
+      "clean_accuracy": 0.9715,
+      "attack_success_rate": 0.99975
+    }
+  ]
+}

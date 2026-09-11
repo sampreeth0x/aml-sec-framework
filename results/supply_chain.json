@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-09-11 17:28:28",
+  "lifecycle": [
+    {
+      "content_hash_ok": true,
+      "signature_ok": true,
+      "verdict": "PASS",
+      "scenario": "benign_redeploy",
+      "behavior_agrees_with_approved": true
+    },
+    {
+      "content_hash_ok": false,
+      "signature_ok": false,
+      "verdict": "TAMPER_DETECTED",
+      "scenario": "tampered_artifact",
+      "tamper_description": "1-ulp float modification at byte offset 3926 (1.0520147103221378e-35 -> 1.0520147820686192e-35)"
+    },
+    {
+      "content_hash_ok": false,
+      "signature_ok": false,
+      "verdict": "TAMPER_DETECTED",
+      "scenario": "tampered + forged_key_recompute"
+    }
+  ],
+  "tampered_behavior": {
+    "tampered_accuracy": 0.983,
+    "approved_accuracy": 0.983,
+    "prediction_disagreement_rate": 0.0,
+    "accuracy_would_flag_it": false,
+    "note": "1-ulp tampering is behaviorally near-invisible; integrity checks are the only reliable control"
+  },
+  "registry_audit": [
+    {
+      "file": "mnist-cnn-v1.bin",
+      "size": 827832,
+      "sha256": "b096eb55856ec913a868dc3f90f94bf5e21d71fe74bca4568e66602b05e7e424"
+    },
+    {
+      "file": "mnist-cnn-v1.manifest.json",
+      "size": 325,
+      "sha256": "498df4d15c63c7030e18dc7bc5318b2a5a39a104b4b76d8bdea9d473c4346178"
+    }
+  ]
+}

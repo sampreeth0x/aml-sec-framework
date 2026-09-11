@@ -1,0 +1,185 @@
+{
+  "timestamp": "2026-09-11 18:25:23",
+  "security_profile": {
+    "poisoning": {
+      "risk_undefended": 11.7625,
+      "measured": {
+        "accuracy_drop_at_5pct": -0.002666666666666706,
+        "src_to_tgt_transfer": 0.0075,
+        "audit_recall": 0.54
+      },
+      "defense": "kNN audit-and-filter retraining",
+      "defense_residual_drop": 0.010666666666666713,
+      "defense_recovery": 0.9683333333333334
+    },
+    "backdoor": {
+      "risk_undefended": 99.83756597222221,
+      "measured": {
+        "asr_at_5pct": 0.9991666666666666,
+        "stealth_multiplier": 0.9984166666666666,
+        "clean_accuracy_at_5pct": 0.9823333333333334
+      },
+      "defense": "kNN audit-and-filter (data-level) \u2014 measured INEFFECTIVE",
+      "defense_asr": 0.9995833333333334,
+      "detection_trigger_flip_scan": 0.8982881944903406
+    },
+    "extraction": {
+      "risk_undefended": 96.73333333333333,
+      "measured": {
+        "fidelity_max_budget_full_api": 0.9673333333333334,
+        "fidelity_argmax_api": 0.96
+      },
+      "defense": "argmax-only + rate limiting",
+      "defense_fidelity": 0.96
+    },
+    "membership_inference": {
+      "risk_undefended": 1.5303277777777735,
+      "measured": {
+        "auc_4epochs_20k": 0.5021450166666667,
+        "auc_8epochs_20k": 0.5053194,
+        "auc_overfit_3k_long": 0.5076516388888889
+      },
+      "defense": "DP gradient clip+noise",
+      "defense_auc": 0.4989808041666666,
+      "defense_clean_accuracy": 0.9747499999999999
+    },
+    "adversarial_examples": {
+      "risk_undefended": 26.975000000000005,
+      "measured": {
+        "pgd_success_eps0.1": 0.26975000000000005,
+        "clean_accuracy_baseline": 0.9834166666666667
+      },
+      "defense": "PGD adversarial training",
+      "defense_success_rate": 0.1609166666666666,
+      "defense_clean_accuracy": 0.96975,
+      "clean_accuracy_cost": 0.013666666666666716
+    },
+    "supply_chain": {
+      "risk_undefended": 100.0,
+      "measured": {
+        "behavioral_check_catches_tamper": false,
+        "prediction_disagreement_rate": 0.0,
+        "integrity_verdict": "TAMPER_DETECTED"
+      },
+      "defense": "SHA-256 + HMAC-signed manifest",
+      "defense_residual_risk": 0.0
+    },
+    "_formula": "risk = normalized measured attacker success under undefended configuration, 0-100; defense columns measured under the best defense from this run. Weights fixed a priori: poisoning 0.4*acc_drop/0.15 + 0.35*transfer + 0.25*(1-recall); backdoor = ASR x (0.5 + 0.5*stealth); extraction = fidelity; membership = 2*(AUC-0.5); adversarial = PGD success at eps=0.1; supply-chain = 1 - P(behavioral check catches 1-ulp tamper)."
+  },
+  "tradeoffs": {
+    "privacy_pareto": [
+      {
+        "defense": "epochs=1",
+        "clean_accuracy": 0.96775,
+        "mia_auc": 0.5000034583333334
+      },
+      {
+        "defense": "epochs=2",
+        "clean_accuracy": 0.9792500000000001,
+        "mia_auc": 0.5014149458333333
+      },
+      {
+        "defense": "epochs=4",
+        "clean_accuracy": 0.9834999999999999,
+        "mia_auc": 0.5021450166666667
+      },
+      {
+        "defense": "epochs=8",
+        "clean_accuracy": 0.98475,
+        "mia_auc": 0.5053194
+      },
+      {
+        "defense": "label_smoothing(0.1)",
+        "clean_accuracy": 0.9869166666666667,
+        "mia_auc": 0.50542045
+      },
+      {
+        "defense": "label_smoothing(0.3)",
+        "clean_accuracy": 0.9874999999999999,
+        "mia_auc": 0.5071773166666667
+      },
+      {
+        "defense": "dp_grad_clip+noise(0.5)",
+        "clean_accuracy": 0.9747499999999999,
+        "mia_auc": 0.4989808041666666
+      },
+      {
+        "defense": "dp_grad_clip+noise(1.0)",
+        "clean_accuracy": 0.9656666666666668,
+        "mia_auc": 0.49731921250000005
+      },
+      {
+        "defense": "dp_grad_clip+noise(2.0)",
+        "clean_accuracy": 0.9428333333333333,
+        "mia_auc": 0.4968849708333334
+      }
+    ],
+    "robustness_pareto": [
+      {
+        "defense": "baseline",
+        "clean_accuracy": 0.9834166666666667,
+        "robust_accuracy_pgd_eps0.1": 0.73025
+      },
+      {
+        "defense": "label_smoothing",
+        "clean_accuracy": 0.9871666666666666,
+        "robust_accuracy_pgd_eps0.1": 0.66
+      },
+      {
+        "defense": "pgd_adversarial_training",
+        "clean_accuracy": 0.96975,
+        "robust_accuracy_pgd_eps0.1": 0.8390833333333334
+      }
+    ],
+    "extraction_policies": [
+      {
+        "policy": "full_confidence",
+        "budget": 2000,
+        "fidelity": 0.9556666666666667,
+        "sub_accuracy": 0.9466666666666667
+      },
+      {
+        "policy": "rounded",
+        "budget": 2000,
+        "fidelity": 0.955,
+        "sub_accuracy": 0.9470000000000001
+      },
+      {
+        "policy": "argmax_only",
+        "budget": 2000,
+        "fidelity": 0.9466666666666667,
+        "sub_accuracy": 0.9396666666666667
+      },
+      {
+        "policy": "full_confidence",
+        "budget": 4000,
+        "fidelity": 0.9673333333333334,
+        "sub_accuracy": 0.9573333333333333
+      },
+      {
+        "policy": "rounded",
+        "budget": 4000,
+        "fidelity": 0.9646666666666667,
+        "sub_accuracy": 0.9576666666666666
+      },
+      {
+        "policy": "argmax_only",
+        "budget": 4000,
+        "fidelity": 0.96,
+        "sub_accuracy": 0.9536666666666666
+      },
+      {
+        "policy": "full_confidence+ratelimit1000",
+        "budget": 2000,
+        "fidelity": 0.912,
+        "sub_accuracy": 0.902
+      },
+      {
+        "policy": "full_confidence+ratelimit1000",
+        "budget": 4000,
+        "fidelity": 0.922,
+        "sub_accuracy": 0.912
+      }
+    ]
+  }
+}

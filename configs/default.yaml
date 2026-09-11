@@ -1,0 +1,15 @@
+# Canonical experiment configuration. All numbers produced under this config are real measurements.
+dataset:
+  name: mnist
+  train_n_per_class: 2000   # 20,000 stratified training samples
+  test_n_per_class: 400     # 4,000 stratified test samples  (95% CI half-width ~ +/-0.4% at 97% acc)
+  download_seed: 0
+
+model:
+  arch: cnn
+  epochs: 4
+  batch_size: 64
+  lr: 0.001
+
+repro:
+  seeds: [0, 1, 2]          # sweeps report mean +/- std over these real reruns

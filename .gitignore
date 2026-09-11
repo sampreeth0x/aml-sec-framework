@@ -1,0 +1,11 @@
+# local tooling
+.tools/
+*.zip
+
+# raw MNIST data (re-downloaded + hash-verified by amlsec/data.py on first run)
+data/*.gz
+
+# python
+__pycache__/
+*.pyc
+.venv/

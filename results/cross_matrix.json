@@ -1,0 +1,536 @@
+{
+  "timestamp": "2026-09-11 18:56:28",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "matrix": {
+    "baseline": {
+      "label": "None (baseline)",
+      "clean": {
+        "clean_accuracy": 0.9830833333333334,
+        "clean_accuracy_std": 0.0023094010767585054,
+        "clean_src_class_accuracy": 0.9808333333333333,
+        "ece": 0.0047665552298227845,
+        "mia_auc": 0.501267075,
+        "mia_auc_std": 0.0007519842505830737,
+        "extraction_fidelity": 0.9659999999999999,
+        "pgd_success": 0.27366666666666667,
+        "pgd_success_std": 0.028002604045576425,
+        "train_seconds": 9.73258646329244
+      },
+      "poison": {
+        "clean_accuracy": 0.9830833333333332,
+        "src_class_accuracy": 0.9825,
+        "src_class_accuracy_std": 0.0,
+        "src_to_tgt_transfer": 0.0025,
+        "ece": 0.0069061796565850235,
+        "train_seconds": 9.692023913065592
+      },
+      "backdoor": {
+        "clean_accuracy": 0.9804166666666667,
+        "asr": 0.9993333333333334,
+        "asr_std": 0.0005773502691896263,
+        "train_seconds": 9.663047313690186
+      },
+      "deltaS": {
+        "poison": 0.0,
+        "backdoor": 0.0,
+        "extraction": 0.0,
+        "mia": 0.0,
+        "adversarial": 0.0
+      },
+      "deltaS_stats": {
+        "poison": {
+          "mean": 0.0,
+          "std": 0.0,
+          "per_seed": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "noise_band": 7.18,
+          "class": "0"
+        },
+        "backdoor": {
+          "mean": 0.0,
+          "std": 0.0,
+          "per_seed": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "noise_band": 0.14,
+          "class": "0"
+        },
+        "extraction": {
+          "mean": 0.0,
+          "std": 0.0,
+          "per_seed": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "noise_band": 1.72,
+          "class": "0"
+        },
+        "mia": {
+          "mean": 0.0,
+          "std": 0.0,
+          "per_seed": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "noise_band": 0.37,
+          "class": "0"
+        },
+        "adversarial": {
+          "mean": 0.0,
+          "std": 0.0,
+          "per_seed": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "noise_band": 6.96,
+          "class": "0"
+        }
+      },
+      "utility_cost": {
+        "clean_accuracy_drop": 0.0,
+        "train_overhead_x": 1.0
+      },
+      "S_per_seed": {
+        "0": {
+          "poison": 5.125000000000004,
+          "backdoor": 99.9,
+          "extraction": 95.8,
+          "mia": 0.13240999999999392,
+          "adversarial": 24.375000000000004
+        },
+        "1": {
+          "poison": 0.0,
+          "backdoor": 99.9,
+          "extraction": 97.0,
+          "mia": 0.4217949999999915,
+          "adversarial": 29.925
+        },
+        "2": {
+          "poison": 0.25,
+          "backdoor": 100.0,
+          "extraction": 97.0,
+          "mia": 0.20603999999999623,
+          "adversarial": 27.800000000000004
+        }
+      }
+    },
+    "auditfilter": {
+      "label": "Poisoning defense (audit-filter)",
+      "clean": {
+        "clean_accuracy": 0.9749166666666667,
+        "clean_accuracy_std": 0.003412599204907218,
+        "clean_src_class_accuracy": 0.9758333333333334,
+        "ece": 0.009658479653298883,
+        "mia_auc": 0.5012847583333334,
+        "mia_auc_std": 0.0015149009238093366,
+        "extraction_fidelity": 0.9633333333333333,
+        "pgd_success": 0.28325,
+        "pgd_success_std": 0.03132491021535416,
+        "train_seconds": 19.79745125770569
+      },
+      "poison": {
+        "clean_accuracy": 0.9772500000000001,
+        "src_class_accuracy": 0.9783333333333334,
+        "src_class_accuracy_std": 0.01664582029619853,
+        "src_to_tgt_transfer": 0.010833333333333334,
+        "ece": 0.0065440484012166565,
+        "train_seconds": 26.256561676661175
+      },
+      "backdoor": {
+        "clean_accuracy": 0.9780833333333333,
+        "asr": 0.9988333333333334,
+        "asr_std": 0.0018085445345175514,
+        "train_seconds": 18.49781568845113
+      },
+      "deltaS": {
+        "poison": 1.25,
+        "backdoor": 0.05,
+        "extraction": 0.27,
+        "mia": -0.0,
+        "adversarial": -0.96
+      },
+      "deltaS_stats": {
+        "poison": {
+          "mean": 1.25,
+          "std": 3.29,
+          "per_seed": [
+            5.0,
+            -0.12,
+            -1.12
+          ],
+          "noise_band": 10.87,
+          "class": "0"
+        },
+        "backdoor": {
+          "mean": 0.05,
+          "std": 0.16,
+          "per_seed": [
+            -0.08,
+            0.23,
+            0.0
+          ],
+          "noise_band": 0.41,
+          "class": "0"
+        },
+        "extraction": {
+          "mean": 0.27,
+          "std": 1.21,
+          "per_seed": [
+            -1.0,
+            1.4,
+            0.4
+          ],
+          "noise_band": 3.45,
+          "class": "0"
+        },
+        "mia": {
+          "mean": -0.0,
+          "std": 0.34,
+          "per_seed": [
+            0.11,
+            0.27,
+            -0.39
+          ],
+          "noise_band": 0.93,
+          "class": "0"
+        },
+        "adversarial": {
+          "mean": -0.96,
+          "std": 2.45,
+          "per_seed": [
+            -0.7,
+            1.35,
+            -3.52
+          ],
+          "noise_band": 9.24,
+          "class": "0"
+        }
+      },
+      "utility_cost": {
+        "clean_accuracy_drop": 0.008166666666666766,
+        "train_overhead_x": 2.03
+      }
+    },
+    "at": {
+      "label": "Adversarial training",
+      "clean": {
+        "clean_accuracy": 0.9706666666666667,
+        "clean_accuracy_std": 0.0038432841858666946,
+        "clean_src_class_accuracy": 0.9800000000000001,
+        "ece": 0.013913015925635852,
+        "mia_auc": 0.4960093666666667,
+        "mia_auc_std": 0.002502733458588753,
+        "extraction_fidelity": 0.9713333333333333,
+        "pgd_success": 0.15058333333333332,
+        "pgd_success_std": 0.005198156724583538,
+        "train_seconds": 50.90824087460836
+      },
+      "poison": {
+        "clean_accuracy": 0.9720833333333333,
+        "src_class_accuracy": 0.98,
+        "src_class_accuracy_std": 0.006614378277661504,
+        "src_to_tgt_transfer": 0.005,
+        "ece": 0.018590842427064984,
+        "train_seconds": 45.78300007184347
+      },
+      "backdoor": {
+        "clean_accuracy": 0.9707500000000001,
+        "asr": 1.0,
+        "asr_std": 0.0,
+        "train_seconds": 43.50751988093058
+      },
+      "deltaS": {
+        "poison": -0.96,
+        "backdoor": -0.07,
+        "extraction": -0.53,
+        "mia": 0.25,
+        "adversarial": 12.31
+      },
+      "deltaS_stats": {
+        "poison": {
+          "mean": -0.96,
+          "std": 5.13,
+          "per_seed": [
+            3.63,
+            0.0,
+            -6.5
+          ],
+          "noise_band": 14.63,
+          "class": "0"
+        },
+        "backdoor": {
+          "mean": -0.07,
+          "std": 0.06,
+          "per_seed": [
+            -0.1,
+            -0.1,
+            0.0
+          ],
+          "noise_band": 0.2,
+          "class": "0"
+        },
+        "extraction": {
+          "mean": -0.53,
+          "std": 0.49,
+          "per_seed": [
+            -1.1,
+            -0.3,
+            -0.2
+          ],
+          "noise_band": 2.11,
+          "class": "0"
+        },
+        "mia": {
+          "mean": 0.25,
+          "std": 0.15,
+          "per_seed": [
+            0.13,
+            0.42,
+            0.21
+          ],
+          "noise_band": 0.53,
+          "class": "0"
+        },
+        "adversarial": {
+          "mean": 12.31,
+          "std": 2.35,
+          "per_seed": [
+            9.7,
+            14.28,
+            12.95
+          ],
+          "noise_band": 9.09,
+          "class": "+"
+        }
+      },
+      "utility_cost": {
+        "clean_accuracy_drop": 0.012416666666666742,
+        "train_overhead_x": 5.23
+      }
+    },
+    "dp": {
+      "label": "DP-style clip+noise",
+      "clean": {
+        "clean_accuracy": 0.9653333333333333,
+        "clean_accuracy_std": 0.0026259918760981093,
+        "clean_src_class_accuracy": 0.9641666666666667,
+        "ece": 0.005281547347704582,
+        "mia_auc": 0.49796165416666666,
+        "mia_auc_std": 0.002490314450662194,
+        "extraction_fidelity": 0.976,
+        "pgd_success": 0.32866666666666666,
+        "pgd_success_std": 0.04340674870723829,
+        "train_seconds": 12.98091689745585
+      },
+      "poison": {
+        "clean_accuracy": 0.9653333333333333,
+        "src_class_accuracy": 0.9641666666666667,
+        "src_class_accuracy_std": 0.013768926368215294,
+        "src_to_tgt_transfer": 0.005833333333333334,
+        "ece": 0.011009953883787034,
+        "train_seconds": 13.254521210988363
+      },
+      "backdoor": {
+        "clean_accuracy": 0.9625833333333333,
+        "asr": 0.9939166666666667,
+        "asr_std": 0.006644233088425919,
+        "train_seconds": 12.9307119846344
+      },
+      "deltaS": {
+        "poison": -3.92,
+        "backdoor": 0.54,
+        "extraction": -1.0,
+        "mia": 0.24,
+        "adversarial": -5.5
+      },
+      "deltaS_stats": {
+        "poison": {
+          "mean": -3.92,
+          "std": 6.78,
+          "per_seed": [
+            -11.75,
+            0.0,
+            0.0
+          ],
+          "noise_band": 18.32,
+          "class": "0"
+        },
+        "backdoor": {
+          "mean": 0.54,
+          "std": 0.64,
+          "per_seed": [
+            0.15,
+            1.28,
+            0.2
+          ],
+          "noise_band": 1.59,
+          "class": "0"
+        },
+        "extraction": {
+          "mean": -1.0,
+          "std": 0.1,
+          "per_seed": [
+            -1.0,
+            -0.9,
+            -1.1
+          ],
+          "noise_band": 1.74,
+          "class": "0"
+        },
+        "mia": {
+          "mean": 0.24,
+          "std": 0.16,
+          "per_seed": [
+            0.1,
+            0.42,
+            0.21
+          ],
+          "noise_band": 0.55,
+          "class": "0"
+        },
+        "adversarial": {
+          "mean": -5.5,
+          "std": 6.5,
+          "per_seed": [
+            -12.92,
+            -2.75,
+            -0.82
+          ],
+          "noise_band": 17.59,
+          "class": "?"
+        }
+      },
+      "utility_cost": {
+        "clean_accuracy_drop": 0.017750000000000155,
+        "train_overhead_x": 1.33
+      }
+    },
+    "ls": {
+      "label": "Label smoothing",
+      "clean": {
+        "clean_accuracy": 0.987,
+        "clean_accuracy_std": 0.00024999999999997247,
+        "clean_src_class_accuracy": 0.9908333333333333,
+        "ece": 0.10946882788464425,
+        "mia_auc": 0.5055909208333333,
+        "mia_auc_std": 0.0043323674378222,
+        "extraction_fidelity": 0.9783333333333334,
+        "pgd_success": 0.27308333333333334,
+        "pgd_success_std": 0.022787514856458826,
+        "train_seconds": 11.176899909973145
+      },
+      "poison": {
+        "clean_accuracy": 0.9861666666666666,
+        "src_class_accuracy": 0.9908333333333333,
+        "src_class_accuracy_std": 0.0028867513459481316,
+        "src_to_tgt_transfer": 0.005,
+        "ece": 0.11272599500169356,
+        "train_seconds": 11.084741512934366
+      },
+      "backdoor": {
+        "clean_accuracy": 0.9871666666666666,
+        "asr": 1.0,
+        "asr_std": 0.0,
+        "train_seconds": 10.999226013819376
+      },
+      "deltaS": {
+        "poison": 0.71,
+        "backdoor": -0.07,
+        "extraction": -1.23,
+        "mia": -0.86,
+        "adversarial": 0.06
+      },
+      "deltaS_stats": {
+        "poison": {
+          "mean": 0.71,
+          "std": 2.63,
+          "per_seed": [
+            3.63,
+            -1.5,
+            0.0
+          ],
+          "noise_band": 9.71,
+          "class": "0"
+        },
+        "backdoor": {
+          "mean": -0.07,
+          "std": 0.06,
+          "per_seed": [
+            -0.1,
+            -0.1,
+            0.0
+          ],
+          "noise_band": 0.2,
+          "class": "0"
+        },
+        "extraction": {
+          "mean": -1.23,
+          "std": 0.85,
+          "per_seed": [
+            -2.2,
+            -0.6,
+            -0.9
+          ],
+          "noise_band": 2.73,
+          "class": "0"
+        },
+        "mia": {
+          "mean": -0.86,
+          "std": 0.94,
+          "per_seed": [
+            -1.92,
+            -0.55,
+            -0.13
+          ],
+          "noise_band": 2.35,
+          "class": "0"
+        },
+        "adversarial": {
+          "mean": 0.06,
+          "std": 0.53,
+          "per_seed": [
+            -0.48,
+            0.58,
+            0.08
+          ],
+          "noise_band": 7.08,
+          "class": "0"
+        }
+      },
+      "utility_cost": {
+        "clean_accuracy_drop": -0.003916666666666568,
+        "train_overhead_x": 1.15
+      }
+    }
+  },
+  "stats_rule": {
+    "paired": "delta-S computed per seed against the same seed of the baseline regime",
+    "band": "t(0.975,df=2)=4.303 * sqrt(SE_def^2 + SE_base^2)",
+    "classes": {
+      "+": "significant positive transfer",
+      "-": "significant adverse interaction",
+      "0": "negligible (|mean|<=5 and within noise)",
+      "?": "unresolved at 3 seeds"
+    }
+  },
+  "formula": {
+    "S_poison": "50*min(1,max(0,Acc_clean_src-Acc_poisoned_src)/0.10) + 50*src_to_tgt_transfer",
+    "S_backdoor": "100*ASR",
+    "S_extraction": "100*fidelity",
+    "S_mia": "100*clip(2*(AUC-0.5),0,1)",
+    "S_adversarial": "100*PGD_success@eps=0.1",
+    "deltaS": "S(baseline) - S(defense), paired by seed; positive = defense transferred"
+  }
+}
