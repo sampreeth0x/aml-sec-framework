@@ -21,6 +21,21 @@ and real model queries on this machine. Nothing is simulated or hardcoded.**
 
 Full measured tables, per-seed values and formulas: [`results/REPORT.md`](results/REPORT.md) · raw JSON in `results/`.
 
+## Proof of concept
+
+Rendered from `dashboard.html` (the dashboard builds itself from `results/*.json` — nothing drawn by hand):
+
+**Unified security profile** — the six measured attack surfaces at a glance
+(poisoning 11.8 / backdoor 99.8 / extraction 96.7 / membership 1.5 / adversarial 27.0 / supply-chain 100.0):
+
+![Dashboard — security profile and dose-response sections](assets/dashboard_top.png)
+
+**Cross-threat Δ-security matrix** — 4 defense regimes × 5 attacks, paired per-seed
+classification against the df=2 noise band. The single significant cell (adversarial
+training → Adv, +12.3 ± 2.4) and the measured backdoor ASR under each regime:
+
+![Dashboard — cross-threat delta-security matrix](assets/dashboard_matrix.png)
+
 ## Architecture
 
 ```
@@ -87,6 +102,7 @@ scripts/build_dashboard.py   regenerates dashboard.html from results/*.json
 results/                     measured results: JSON per module + REPORT.md
 configs/default.yaml         experiment configuration
 artifacts/registry/          signed model manifests + payloads (supply-chain module)
+assets/                      proof-of-concept screenshots (rendered from dashboard.html)
 dashboard.html               self-contained results dashboard (open in a browser)
 start.bat                    one-click full pipeline → dashboard
 ```
